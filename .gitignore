@@ -1,0 +1,7 @@
+build/
+iso_root/
+*.iso
+
+# Vendored bootloader — fetched separately, not part of kernel source
+limine/
+limine-protocol/
