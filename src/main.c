@@ -186,6 +186,23 @@ void kmain(void) {
 
     vmm_init();
 
+    uint64_t phys = pmm_alloc_page();
+    uint64_t virt = 0xffffc00000000000ULL;
+    if (!vmm_map_page(
+        virt,
+        phys,
+        PAGE_WRITABLE)) {
+    serial_write("VMM mapping failed\n");
+    hcf();
+    }
 
+    uint64_t *through_hhdm = (uint64_t *)phys_to_virt(phys);
+
+    uint64_t *through_our_mapping = (uint64_t *)virt;
+
+    *through_our_mapping = 0xDEADBEEFCAFEBABE;
+    if (*through_hhdm == 0xDEADBEEFCAFEBABE) {
+        serial_write("VMM mapping test passed\n");
+    }
     hcf();
 }
